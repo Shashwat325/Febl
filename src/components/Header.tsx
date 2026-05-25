@@ -101,7 +101,7 @@ export function Header({ onToggleSidebar }: HeaderProps) {
             <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-primary opacity-0 group-hover:opacity-100 transition-opacity blur-sm" />
           </div>
           <span className="font-display text-lg font-bold text-foreground hidden sm:block tracking-tight">
-            Fiction<span className="text-primary">Hub</span>
+            Febl</span>
           </span>
         </div>
 
