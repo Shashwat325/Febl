@@ -5,7 +5,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
-import logo from "@/assets/fictionhub-logo.png";
+import logo from "@/assets/logo.png";
 import { useState, useRef, useEffect } from "react";
 import { API_URL, fixImageUrl } from "@/lib/config";
 import { NotificationBell } from "@/components/NotificationBell";

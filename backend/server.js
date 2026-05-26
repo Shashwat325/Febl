@@ -115,7 +115,11 @@ socket.on("user:communities", ({ userId, communityIds }) => {
 
 
 
-mongoose.connect(process.env.MONGODB_URI)
+mongoose.connect(process.env.MONGO_URI, {
+  serverSelectionTimeoutMS: 30000,
+  socketTimeoutMS: 45000,
+  connectTimeoutMS: 30000,
+})
   .then(() => console.log("MongoDB Connected"))
   .catch((err) => console.log(err));
 
