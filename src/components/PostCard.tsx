@@ -118,7 +118,6 @@ export function PostCard({ post }: { post: Post }) {
               onClick={e => e.stopPropagation()}
               className="flex items-center gap-1.5 font-semibold text-foreground hover:text-primary transition-colors"
             >
-              <span className="text-sm">{post.fandomIcon}</span>
               <span>f/{post.fandomName}</span>
             </Link>
             <span className="text-border">•</span>

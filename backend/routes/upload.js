@@ -1,15 +1,39 @@
 const express = require("express");
 const router = express.Router();
 const multer = require("multer");
-const path = require("path");
+const cloudinary = require("cloudinary").v2;
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const User = require("../models/User");
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/");
+// Configure Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+// Cloudinary storage for images
+const imageStorage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: "fictionhub",
+    allowed_formats: ["jpg", "jpeg", "png", "gif", "webp"],
+    resource_type: "image",
   },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
+});
+
+// Cloudinary storage for media (images + videos)
+const mediaStorage = new CloudinaryStorage({
+  cloudinary,
+  params: (req, file) => {
+    const isVideo = file.mimetype.startsWith("video/");
+    return {
+      folder: "fictionhub/posts",
+      resource_type: isVideo ? "video" : "image",
+      allowed_formats: isVideo
+        ? ["mp4", "webm", "mov"]
+        : ["jpg", "jpeg", "png", "gif", "webp"],
+    };
   },
 });
 
@@ -21,21 +45,25 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-const upload = multer({
-  storage,
+const uploadMedia = multer({
+  storage: mediaStorage,
   fileFilter,
   limits: { fileSize: 100 * 1024 * 1024 },
 });
 
-const getFilePath = (filename) => `/uploads/${filename}`;
+const uploadImage = multer({
+  storage: imageStorage,
+  fileFilter,
+  limits: { fileSize: 10 * 1024 * 1024 },
+});
 
 // Post media upload — images and videos
-router.post("/", upload.array("media", 10), (req, res) => {
+router.post("/", uploadMedia.array("media", 10), (req, res) => {
   try {
     if (!req.files || req.files.length === 0) {
       return res.status(400).json({ error: "No files received" });
     }
-    const filePaths = req.files.map(file => getFilePath(file.filename));
+    const filePaths = req.files.map(file => file.path);
     res.json(filePaths);
   } catch (err) {
     console.error("Upload route error:", err);
@@ -44,10 +72,10 @@ router.post("/", upload.array("media", 10), (req, res) => {
 });
 
 // Profile picture or banner upload
-router.post("/:userId", upload.single("image"), async (req, res) => {
+router.post("/:userId", uploadImage.single("image"), async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ error: "No file uploaded" });
-    const imagePath = getFilePath(req.file.filename);
+    const imagePath = req.file.path;
     const user = await User.findById(req.params.userId);
     if (!user) return res.status(404).json({ error: "User not found" });
     if (req.body.type === "banner") {
