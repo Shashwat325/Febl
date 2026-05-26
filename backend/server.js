@@ -114,14 +114,14 @@ app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.get("/api/chat/online-users", (req, res) => {
   res.json([...onlineUsers.keys()]);
 });
-
+app.use("/api/communities", require("./routes/communities"));
 app.get("/api/communities/:id/online", (req, res) => {
   res.json({ onlineMembers: getOnlineCountForCommunity(req.params.id) });
 });
 
 app.use("/api/posts", require("./routes/posts"));
 app.use("/api/users", require("./routes/user"));
-app.use("/api/communities", require("./routes/communities"));
+
 app.use("/api/upload", require("./routes/upload"));
 app.use("/uploads", express.static("uploads"));
 app.use("/api/auth", require("./routes/auth"));
