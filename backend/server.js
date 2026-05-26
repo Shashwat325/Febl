@@ -4,7 +4,13 @@ const cors = require("cors");
 const http = require("http");
 const { Server } = require("socket.io");
 require("dotenv").config();
-
+mongoose.connect(process.env.MONGO_URI, {
+  serverSelectionTimeoutMS: 30000,
+  socketTimeoutMS: 45000,
+  connectTimeoutMS: 30000,
+})
+  .then(() => console.log("MongoDB Connected"))
+  .catch((err) => console.log(err));
 const app = express();
 const server = http.createServer(app);
 
@@ -113,15 +119,6 @@ socket.on("user:communities", ({ userId, communityIds }) => {
   });
   });
 
-
-
-mongoose.connect(process.env.MONGO_URI, {
-  serverSelectionTimeoutMS: 30000,
-  socketTimeoutMS: 45000,
-  connectTimeoutMS: 30000,
-})
-  .then(() => console.log("MongoDB Connected"))
-  .catch((err) => console.log(err));
 
 app.use(cors({ origin: process.env.CORS_ORIGIN || "*", credentials: true, methods: ["GET","POST","PUT","DELETE","PATCH"], allowedHeaders: ["Content-Type","Authorization"] }));
 app.use(express.json({ limit: "50mb" }));
