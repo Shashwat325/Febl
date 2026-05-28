@@ -50,7 +50,7 @@ const AppContent = () => {
 
     {/* App pages — Layout provides the header */}
     <Route element={<Layout />}>
-      <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+      <Route path="/home" element={<Home />} />
       <Route path="/search" element={<SearchPage />} />
       <Route path="/post/:postId" element={<PostDetail />} />
       <Route path="/profile/:username" element={<Profile />} />
