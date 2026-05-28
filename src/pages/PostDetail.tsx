@@ -2,6 +2,7 @@ import { API_URL, fixImageUrl } from "@/lib/config";
 import { useEffect, useState, useRef } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import { ArrowBigUp, ArrowBigDown } from "lucide-react";
+import {Header} from "@/components/Header";
 
 export default function PostDetail() {
   const { postId } = useParams();
@@ -67,12 +68,16 @@ export default function PostDetail() {
   if (!post) return <div className="p-4 text-white">Loading...</div>;
   console.log(post.author.username)
   return (
+    
     <div className="max-w-3xl mx-auto p-4 text-white">
-
+      
       {/* 🔥 POST SECTION */}
       <div className="border rounded-xl p-4 bg-card mb-6">
 
         {/* Title */}
+        <h2 className="text-sm text-muted-foreground mb-1">
+          r/{ post.community?.name}
+        </h2>
         <h1 className="text-xl font-bold mb-2">{post.title}</h1>
 
         {/* Meta */}
@@ -109,7 +114,7 @@ export default function PostDetail() {
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
           placeholder="Write a comment..."
-          className="w-full p-2 rounded bg-secondary text-white"
+          className="w-full p-2 rounded bg-secondary text-black"
           onKeyDown={(e)=>{if(e.key=="Enter"){
             handleAddComment()
           }}}

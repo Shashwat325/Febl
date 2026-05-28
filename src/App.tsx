@@ -45,12 +45,13 @@ const AppContent = () => {
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
         <Route path="search" element={<SearchPage />} />
+        <Route path="/post/:postId" element={<PostDetail />} />
       </Route>
       <Route path="/categories" element={<Categories />} />
       <Route path="/role" element={<Role />} />
       <Route path="/login" element={<Login />} />
       <Route path="/profile/:username" element={<Profile />} />
-      <Route path="/post/:postId" element={<PostDetail />} />
+      
       <Route path="/profile/:username/edit" element={<EditProfile />} />
       <Route path="/search" element={<SearchPage />} />
       <Route path="/create" element={<CreatePost />} />
