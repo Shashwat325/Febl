@@ -118,7 +118,9 @@ router.post("/:postId/vote", async (req, res) => {
   }
 });
 router.get("/:id", async (req, res) => {
-  const post = await Post.findById(req.params.id).populate("author");
+  const post = await Post.findById(req.params.id)
+  .populate("author")
+  .populate("community", "name");
   res.json(post);
 });
 
