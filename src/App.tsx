@@ -39,31 +39,32 @@ const AppContent = () => {
   }, [navigate]);
 
   return (
-    <Routes>
-      <Route path="/" element={<Welcome />} />
+  <Routes>
+    {/* Public pages — no header */}
+    <Route path="/" element={<Welcome />} />
+    <Route path="/login" element={<Login />} />
+    <Route path="/register" element={<Register />} />
+    <Route path="/thankyou" element={<ThankstoRegister />} />
+    <Route path="/role" element={<Role />} />
+    <Route path="/categories" element={<Categories />} />
+
+    {/* App pages — Layout provides the header */}
+    <Route element={<Layout />}>
       <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
-      <Route path="/" element={<Layout />}>
-        <Route index element={<Home />} />
-        <Route path="search" element={<SearchPage />} />
-        <Route path="/post/:postId" element={<PostDetail />} />
-      </Route>
-      <Route path="/categories" element={<Categories />} />
-      <Route path="/role" element={<Role />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/profile/:username" element={<Profile />} />
-      
-      <Route path="/profile/:username/edit" element={<EditProfile />} />
       <Route path="/search" element={<SearchPage />} />
-      <Route path="/create" element={<CreatePost />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/thankyou" element={<ThankstoRegister />} />
+      <Route path="/post/:postId" element={<PostDetail />} />
+      <Route path="/profile/:username" element={<Profile />} />
+      <Route path="/profile/:username/edit" element={<EditProfile />} />
       <Route path="/f/:id" element={<FandomPage />} />
+      <Route path="/create" element={<CreatePost />} />
       <Route path="/createcommunity" element={<CreateCommunity />} />
       <Route path="/chat" element={<ProtectedRoute><ChatList /></ProtectedRoute>} />
       <Route path="/chat/:otherId" element={<ProtectedRoute><ChatConversation /></ProtectedRoute>} />
-      <Route path="*" element={<NotFound />} />
-    </Routes>
-  );
+    </Route>
+
+    <Route path="*" element={<NotFound />} />
+  </Routes>
+);
 };
 
 const App = () => {

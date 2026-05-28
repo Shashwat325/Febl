@@ -67,7 +67,7 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
+      {/*<Header onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} />*/}
 
       <div className="flex">
         <FandomSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
