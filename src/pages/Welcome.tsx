@@ -9,10 +9,10 @@ const FEATURES = [
 ];
 
 const BUBBLES = [
-  { text: "Just posted chapter 12 🔥", delay: "0s",   left: "8%",   top: "20%" },
+  { text: "Just posted chapter 12 ", delay: "0s",   left: "8%",   top: "20%" },
   { text: "Onepiece lore drop???",      delay: "0.8s", left: "70%",  top: "14%" },
-  { text: "New AU just dropped ✍️",    delay: "1.4s", left: "55%",  top: "72%" },
-  { text: "Omg that ending 😭",         delay: "0.4s", left: "15%",  top: "68%" },
+  { text: "New AU just dropped !",    delay: "1.4s", left: "55%",  top: "72%" },
+  { text: "Omg that ending!",         delay: "0.4s", left: "15%",  top: "68%" },
 ];
 
 export default function Welcome() {
@@ -127,7 +127,7 @@ export default function Welcome() {
 
       {/* Footer */}
       <footer className="relative z-10 py-6 text-center text-xs text-muted-foreground">
-        © {new Date().getFullYear()} FictionHub — Made with ❤️ for fans
+        © {new Date().getFullYear()} FictionHub — Made for fans.
       </footer>
     </div>
   );
