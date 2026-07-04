@@ -24,9 +24,8 @@ const notificationSchema = new mongoose.Schema({
     ],
     required: true,
   },
-  // What to navigate to when clicked
+  
   link: { type: String, default: "" },
-  // Short description shown in the dropdown
   message: { type: String, required: true },
   read: { type: Boolean, default: false },
 }, { timestamps: true });

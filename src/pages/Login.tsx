@@ -18,7 +18,7 @@ export default function Login() {
     if (!form.email.trim()) { newErrors.email = "Email is required"; valid = false; }
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) { newErrors.email = "Enter a valid email address"; valid = false; }
     if (!form.password.trim()) { newErrors.password = "Password is required"; valid = false; }
-    else if (form.password.length < 6) { newErrors.password = "Password must be at least 6 characters"; valid = false; }
+    else if (form.password.length < 10) { newErrors.password = "Password must be at least 10 characters"; valid = false; }
     setErrors(newErrors);
     return valid;
   };

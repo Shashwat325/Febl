@@ -165,7 +165,7 @@ export default function ChatList() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
+      {/*<Header />*/}
 
       <div className="max-w-lg mx-auto flex flex-col h-[calc(100vh-56px)]">
         {/* Page header */}

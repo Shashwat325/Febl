@@ -28,7 +28,6 @@ router.post("/", async (req, res) => {
   }
 });
 
-// ✅ Join / Leave community — MUST be before /:id
 router.post("/:id/join", async (req, res) => {
   const { userId } = req.body;
   const communityId = req.params.id;

@@ -26,7 +26,7 @@ const communitySchema = new mongoose.Schema({
   // ✅ Media
   icon: {
     type: String,
-    default: "" // empty means fallback
+    default: `` 
   },
 
   banner: {

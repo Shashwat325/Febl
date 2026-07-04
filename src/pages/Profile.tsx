@@ -125,7 +125,7 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-background font-sans">
-      <Header onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
+      {/* <Header onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} /> */}
 
       {/* ── Lightbox ── */}
       {lightbox && (

@@ -40,7 +40,6 @@ io.on("connection", (socket) => {
       onlineUsers.set(userId, socket.id);
       io.emit("online:update", [...onlineUsers.keys()]);
 
-      // Only query DB if mongoose is connected
       if (mongoose.connection.readyState === 1) {
         const User = require("./models/User");
         const user = await User.findById(userId).select("followingCommunities");
