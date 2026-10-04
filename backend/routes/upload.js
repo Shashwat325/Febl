@@ -4,13 +4,14 @@ const multer = require("multer");
 const cloudinary = require("cloudinary").v2;
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const User = require("../models/User");
-
+const {auth,sameuser} = require("../middleware/auth");
 // Configure Cloudinary
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
+
 
 // Cloudinary storage for images
 const imageStorage = new CloudinaryStorage({
@@ -58,7 +59,7 @@ const uploadImage = multer({
 });
 
 // Post media upload — images and videos
-router.post("/", uploadMedia.array("media", 10), (req, res) => {
+router.post("/",auth, uploadMedia.array("media", 10), (req, res) => {
   try {
     if (!req.files || req.files.length === 0) {
       return res.status(400).json({ error: "No files received" });
@@ -72,7 +73,7 @@ router.post("/", uploadMedia.array("media", 10), (req, res) => {
 });
 
 // Profile picture or banner upload
-router.post("/:userId", uploadImage.single("image"), async (req, res) => {
+router.post("/:userId", auth, sameuser , uploadImage.single("image"), async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ error: "No file uploaded" });
     const imagePath = req.file.path;
@@ -84,7 +85,9 @@ router.post("/:userId", uploadImage.single("image"), async (req, res) => {
       user.profilePicture = imagePath;
     }
     await user.save();
-    res.json(user);
+    const safeuser=user.toObject();
+    delete safeuser.password;
+    res.json(safeuser);
   } catch (err) {
     console.error("UPLOAD ERROR:", err);
     res.status(500).json({ error: err.message });
@@ -92,7 +95,7 @@ router.post("/:userId", uploadImage.single("image"), async (req, res) => {
 });
 
 // Remove profile picture or banner
-router.post("/remove/:userId", async (req, res) => {
+router.post("/remove/:userId", auth, async (req, res) => {
   try {
     const { type } = req.body;
     const user = await User.findById(req.params.userId);
@@ -100,7 +103,10 @@ router.post("/remove/:userId", async (req, res) => {
     if (type === "banner") user.bannerImage = "";
     else user.profilePicture = "";
     await user.save();
-    res.json(user);
+    const safeuser=user.toObject();
+    delete safeuser.password;
+    delete safeuser.email;
+    res.json(safeuser);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Delete failed" });

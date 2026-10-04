@@ -14,7 +14,7 @@ export default function EditProfile() {
   const handleSave = async () => {
     const res = await fetch(`${API_URL}/api/users/${user._id}`, {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "Authorization": `Bearer ${localStorage.getItem("token")}` },
       body: JSON.stringify({
         username,
         bio,

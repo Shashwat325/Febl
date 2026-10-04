@@ -3,7 +3,7 @@ const router = express.Router();
 const Comment = require("../models/Comment");
 const Post = require("../models/Post");
 const { createNotification } = require("../utils/notify");
-
+const {auth} = require("../middleware/auth");
 // GET comments for a post
 router.get("/:postId", async (req, res) => {
   try {
@@ -17,7 +17,7 @@ router.get("/:postId", async (req, res) => {
 });
 
 // POST create a comment
-router.post("/:postId", async (req, res) => {
+router.post("/:postId", auth, async (req, res) => {
   try {
     const { content, userId } = req.body;
     const { postId } = req.params;

@@ -46,6 +46,7 @@ export default function CreatePost() {
     setLoading(true);
 
     try {
+      const token=localStorage.getItem("token");
       const user = JSON.parse(localStorage.getItem("user") || "{}");
       if (!user._id) { setError("You must be logged in to post"); setLoading(false); return; }
 
@@ -56,6 +57,7 @@ export default function CreatePost() {
         files.forEach(file => formData.append("media", file));
 
         const uploadRes = await fetch(`${API_URL}/api/upload`, {
+          headers: { Authorization: `Bearer ${token}` },
           method: "POST",
           body: formData,
         });
@@ -70,7 +72,7 @@ export default function CreatePost() {
 
       const postRes = await fetch(`${API_URL}/api/posts`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify({
           title,
           content,
@@ -81,8 +83,9 @@ export default function CreatePost() {
         }),
       });
 
-      if (!postRes.ok) throw new Error("Post failed");
-
+      if (!postRes.ok){ 
+        const errData = await postRes.json().catch(() => ({}));
+        throw new Error(errData.error || "Post failed");}
       if (preselectedCommunityid) navigate(`/f/${preselectedCommunityid}`);
       else navigate("/home");
 

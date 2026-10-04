@@ -44,7 +44,7 @@ export function PostCard({ post }: { post: Post }) {
     try {
       const res = await fetch(`${API_URL}/api/posts/${post._id}/vote`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json",Authorization: `Bearer ${localStorage.getItem("token")}` },
         body: JSON.stringify({ postId: post._id, userId: currentUserId, action: direction }),
       });
       if (!res.ok) throw new Error("Failed to vote");

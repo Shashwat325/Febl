@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema({
   password: String,
   role: String,
   nationality: String,
-  categories: [String], // interests
+  categories: [String], 
   profilePicture: {
     type: String,
     default: ""

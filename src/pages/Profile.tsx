@@ -67,11 +67,12 @@ const Profile = () => {
   };
 
   const handleFileChange = async (e: any) => {
+    console.log("file chosen", e.target.files);
     const file = e.target.files[0];
     if (!file) return;
     const formData = new FormData();
     formData.append("image", file);
-    const res = await fetch(`${API_URL}/api/upload/${user._id}`, { method: "POST", body: formData });
+    const res = await fetch(`${API_URL}/api/upload/${user._id}`, { method: "POST", headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }, body: formData });
     const data = await res.json();
     if (res.ok) { setProfileuser(data); localStorage.setItem("user", JSON.stringify(data)); setLightbox(null); }
     else alert("Upload failed");
@@ -83,32 +84,32 @@ const Profile = () => {
     const formData = new FormData();
     formData.append("image", file);
     formData.append("type", "banner");
-    const res = await fetch(`${API_URL}/api/upload/${user._id}`, { method: "POST", body: formData });
+    const res = await fetch(`${API_URL}/api/upload/${user._id}`, { method: "POST", headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }, body: formData });
     const data = await res.json();
     if (res.ok) { setProfileuser(data); localStorage.setItem("user", JSON.stringify(data)); setLightbox(null); }
     else alert("Upload failed");
   };
   const handleFollow = async () => {
-  if (!user) return navigate("/login");
-  try {
-    const res = await fetch(`${API_URL}/api/users/${Profileuser._id}/follow`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ followerId: user._id }),
-    });
-    const data = await res.json();
-    if (res.ok) {
-      setIsFollowing(data.followed);
-      setFollowersCount(data.followersCount);
+    if (!user) return navigate("/login");
+    try {
+      const res = await fetch(`${API_URL}/api/users/${Profileuser._id}/follow`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${localStorage.getItem("token")}` },
+        body: JSON.stringify({ followerId: user._id }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setIsFollowing(data.followed);
+        setFollowersCount(data.followersCount);
+      }
+    } catch (err) {
+      console.error("Follow error:", err);
     }
-  } catch (err) {
-    console.error("Follow error:", err);
-  }
-};
+  };
   const handleRemoveImage = async (type: "avatar" | "banner") => {
     const res = await fetch(`${API_URL}/api/upload/remove/${user._id}`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "Authorization": `Bearer ${localStorage.getItem("token")}` },
       body: JSON.stringify({ type }),
     });
     if (res.ok) { await fetchProfile(); setLightbox(null); }
@@ -125,6 +126,8 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-background font-sans">
+      <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" accept="image/*" />
+          <input type="file" ref={bannerInputRef} onChange={handleBannerChange} className="hidden" accept="image/*" />
       {/* <Header onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} /> */}
 
       {/* ── Lightbox ── */}
@@ -154,8 +157,8 @@ const Profile = () => {
               />
             ) : (
               <div className={`w-full bg-gradient-to-br ${lightbox === "avatar"
-                  ? "from-indigo-500 to-blue-500 h-64 w-64 mx-auto rounded-full flex items-center justify-center text-white text-8xl font-bold"
-                  : "from-indigo-600 to-blue-100 h-48 rounded-2xl"
+                ? "from-indigo-500 to-blue-500 h-64 w-64 mx-auto rounded-full flex items-center justify-center text-white text-8xl font-bold"
+                : "from-indigo-600 to-blue-100 h-48 rounded-2xl"
                 }`}>
                 {lightbox === "avatar" && avatarLetter}
               </div>
@@ -185,8 +188,6 @@ const Profile = () => {
           </div>
 
           {/* Hidden file inputs */}
-          <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" accept="image/*" />
-          <input type="file" ref={bannerInputRef} onChange={handleBannerChange} className="hidden" accept="image/*" />
         </div>
       )}
 
@@ -259,15 +260,15 @@ const Profile = () => {
               {/* Stats */}
               <div className="flex flex-wrap gap-6 text-sm text-muted-foreground mb-6">
                 <div className="flex items-center gap-1.5">
-  <UserCheck className="h-4 w-4 text-violet-400" />
-  <span className="font-semibold text-foreground">{followersCount}</span>
-  <span>Followers</span>
-</div>
-<div className="flex items-center gap-1.5">
-  <Users className="h-4 w-4 text-fuchsia-400" />
-  <span className="font-semibold text-foreground">{Profileuser?.following?.length ?? 0}</span>
-  <span>Following</span>
-</div>
+                  <UserCheck className="h-4 w-4 text-violet-400" />
+                  <span className="font-semibold text-foreground">{followersCount}</span>
+                  <span>Followers</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <Users className="h-4 w-4 text-fuchsia-400" />
+                  <span className="font-semibold text-foreground">{Profileuser?.following?.length ?? 0}</span>
+                  <span>Following</span>
+                </div>
                 <div className="flex items-center gap-1.5">
                   <Heart className="h-4 w-4 text-rose-400" />
                   <span className="font-semibold text-foreground">{likedPosts.length}</span>
@@ -292,8 +293,8 @@ const Profile = () => {
                     key={tab}
                     onClick={() => setActiveTab(tab)}
                     className={`px-4 py-2 text-sm font-semibold capitalize transition-colors border-b-2 -mb-px ${activeTab === tab
-                        ? "border-violet-500 text-foreground"
-                        : "border-transparent text-muted-foreground hover:text-foreground"
+                      ? "border-violet-500 text-foreground"
+                      : "border-transparent text-muted-foreground hover:text-foreground"
                       }`}
                   >
                     {tab === "posts" ? "Reacted" : tab === "created" ? "Posts" : "Communities"}

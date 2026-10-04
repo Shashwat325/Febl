@@ -3,6 +3,7 @@ const router = express.Router();
 const Post = require("../models/Post");
 const User = require("../models/User");
 const Comment = require("../models/Comment");
+const {auth} = require("../middleware/auth");
 // ✅ Get all posts (latest first)
 const { createNotification } = require("../utils/notify");
 
@@ -28,8 +29,13 @@ router.get("/", async (req, res) => {
   }
 });
 // ✅ CREATE POST
-router.post("/", async (req, res) => {
+router.post("/", auth, async (req, res) => {
   try {
+    const prefix=`https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/`;
+    const media=Array.isArray(req.body.media)?req.body.media:[req.body.media];
+    if(media.length>10 || !media.every(m=>m.startsWith(prefix))){
+      return res.status(400).json({error:"Invalid media URLs"});
+    }
     const newPost = new Post(req.body);
     await newPost.save();
 
@@ -43,7 +49,7 @@ router.post("/", async (req, res) => {
     res.status(500).json(err);
   }
 });
-router.post("/:postId/vote", async (req, res) => {
+router.post("/:postId/vote", auth, async (req, res) => {
   const { userId, action } = req.body;
   const { postId } = req.params;
 

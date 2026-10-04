@@ -19,7 +19,7 @@ export default function CreateCommunity() {
       const user = JSON.parse(localStorage.getItem("user") || "{}");
       const res = await fetch(`${API_URL}/api/communities`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json",Authorization: `Bearer ${localStorage.getItem("token")}` },
         body: JSON.stringify({
           name,
           description,

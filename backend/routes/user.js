@@ -3,9 +3,9 @@ const User = require("../models/User");
 const mongoose = require("mongoose");
 const router = express.Router();
 const { createNotification } = require("../utils/notify");
-
+const {auth }= require("../middleware/auth");
 // ✅ MUST be before GET /:identifier
-router.post("/:id/follow", async (req, res) => {
+router.post("/:id/follow", auth, async (req, res) => {
   try {
     const { followerId } = req.body;
     const targetId = req.params.id;
@@ -52,7 +52,7 @@ router.post("/:id/follow", async (req, res) => {
   }
 });
 
-router.post("/update-category", async (req, res) => {
+router.post("/update-category", auth, async (req, res) => {
   const { userId, category } = req.body;
   try {
     const user = await User.findByIdAndUpdate(userId, { $addToSet: { categories: category } }, { new: true });

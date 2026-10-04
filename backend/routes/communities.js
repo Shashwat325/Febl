@@ -2,9 +2,9 @@ const express = require("express");
 const router = express.Router();
 const Community = require("../models/Community");
 const User = require("../models/User"); // ✅ Moved to top
-
+const {auth} = require("../middleware/auth"); // ✅ Moved to top
 // ✅ Create community
-router.post("/", async (req, res) => {
+router.post("/", auth, async (req, res) => {
   try {
     const { name, description, tags, creator } = req.body;
 
@@ -28,7 +28,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.post("/:id/join", async (req, res) => {
+router.post("/:id/join",auth, async (req, res) => {
   const { userId } = req.body;
   const communityId = req.params.id;
   console.log("Join request:", { userId, communityId });
@@ -68,7 +68,7 @@ router.post("/:id/join", async (req, res) => {
 });
 
 // ✅ Update community
-router.put("/:id", async (req, res) => {
+router.put("/:id", auth, async (req, res) => {
   try {
     const updated = await Community.findByIdAndUpdate(req.params.id, req.body, { new: true }); // ✅ Fixed: was `awaitCommunity`
     res.json(updated);
